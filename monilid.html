@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoniLid — INEM Luis López de Mesa</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI','Arial',sans-serif}
+        :root{
+            --azul-oscuro:#0B2E59;
+            --azul-medio:#1E6BD9;
+            --azul-claro:#4A90E2;
+            --dorado:#D4AF37;
+            --dorado-claro:#F2D272;
+            --blanco:#FFFFFF;
+            --gris-claro:#F4F6F9;
+            --gris-medio:#8A94A6;
+            --verde:#27AE60;
+            --naranja:#E67E22;
+            --sena-verde:#009639;
+            --sena-amarillo:#FFCC00;
+        }
+        body{
+            background:linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-medio) 100%);
+            min-height:100vh;
+            color:#333;
+        }
+        .oculto{display:none !important}
+        .container{max-width:1200px;margin:0 auto;padding:20px}
+
+        /* CABECERA */
+        header{
+            background:rgba(255,255,255,.95);
+            padding:12px 30px;
+            display:flex;justify-content:space-between;align-items:center;
+            box-shadow:0 2px 10px rgba(0,0,0,.1);position:sticky;top:0;z-index:100
+        }
+        .logos-izq{display:flex;align-items:center;gap:15px}
+        .logo-inem{height:55px}
+        .logo-moni{height:60px}
+        .logo-sena{height:50px}
+        .nav-botones button{
+            margin-left:12px;padding:10px 24px;border:none;border-radius:8px;
+            cursor:pointer;font-weight:700;font-size:1rem;transition:all .3s ease
+        }
+        .btn-reg{background:linear-gradient(90deg,var(--dorado),var(--dorado-claro));color:var(--azul-oscuro)}
+        .btn-reg:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(212,175,55,.4)}
+        .btn-ing{background:linear-gradient(90deg,var(--azul-medio),var(--azul-claro));color:white}
+        .btn-ing:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(30,107,217,.4)}
+        .btn-cerrar{background:var(--naranja);color:white;margin-left:10px}
+
+        /* PORTADA */
+        .portada{
+            text-align:center;padding:50px 20px;color:white;
+            animation:aparece 1s ease-out
+        }
+        @keyframes aparece{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+        .portada h1{font-size:3rem;margin-bottom:10px;text-shadow:0 2px 4px rgba(0,0,0,.2)}
+        .portada h2{font-size:1.3rem;font-weight:400;opacity:.9;margin-bottom:5px}
+        .portada .eslogan{font-style:italic;color:var(--dorado-claro);font-size:1.1rem;margin:15px 0 30px}
+        .decoracion{display:flex;justify-content:center;gap:40px;margin:30px 0}
+        .decor-item{text-align:center;color:white;opacity:.9}
+        .decor-item span{font-size:2.5rem;display:block;margin-bottom:8px}
+
+        /* TARJETAS MÓDULOS */
+        .modulos{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:25px;margin:40px 0}
+        .modulo{
+            background:white;border-radius:16px;padding:30px;text-align:center;cursor:pointer;
+            transition:all .3s ease;box-shadow:0 4px 15px rgba(0,0,0,.1);border-top:5px solid var(--azul-medio)
+        }
+        .modulo:hover{transform:translateY(-8px);box-shadow:0 12px 25px rgba(0,0,0,.2)}
+        .modulo h3{color:var(--azul-oscuro);margin-bottom:10px;font-size:1.2rem}
+        .modulo p{color:var(--gris-medio)}
+        .modulo:nth-child(2){border-top-color:var(--verde)}
+        .modulo:nth-child(3){border-top-color:var(--naranja)}
+
+        /* FORMULARIOS */
+        .card{
+            background:white;border-radius:16px;padding:35px;margin:20px 0;
+            box-shadow:0 8px 25px rgba(0,0,0,.15);position:relative
+        }
+        .cerrar{position:absolute;top:15px;right:20px;font-size:1.5rem;cursor:pointer;color:#999}
+        .cerrar:hover{color:#333}
+        h2{color:var(--azul-oscuro);margin-bottom:25px;border-bottom:2px solid var(--gris-claro);padding-bottom:10px}
+        label{display:block;margin:15px 0 5px;font-weight:600;color:var(--azul-oscuro)}
+        input,select,textarea{
+            width:100%;padding:12px 15px;border:2px solid #E0E5ED;border-radius:8px;
+            font-size:1rem;transition:border-color .3s
+        }
+        input:focus,select:focus{outline:none;border-color:var(--azul-medio)}
+        button{
+            padding:12px 25px;border:none;border-radius:8px;cursor:pointer;
+            font-size:1rem;font-weight:700;transition:all .3s ease
+        }
+        button:hover{transform:translateY(-1px)}
+        .btn-primario{background:var(--azul-medio);color:white}
+        .btn-exito{background:var(--verde);color:white}
+        .btn-peligro{background:var(--naranja);color:white}
+        .alerta{padding:15px;border-radius:8px;margin:15px 0}
+        .alerta.info{background:#E8F4FD;color:#0B5394;border-left:4px solid var(--azul-medio)}
+        .alerta.exito{background:#E8F8E8;color:#206C20;border-left:4px solid var(--verde)}
+        .alerta.aviso{background:#FFF8E1;color:#8A6D00;border-left:4px solid var(--dorado)}
+        .alerta.peligro{background:#FDEDED;color:#B02020;border-left:4px solid var(--naranja)}
+        .fila{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+        .fila button{flex:1;min-width:140px}
+        .pie{text-align:center;margin-top:50px;padding:25px;color:white;opacity:.85;font-size:.9rem}
+        .etiqueta{padding:4px 10px;border-radius:20px;font-size:.8rem;font-weight:bold;color:white}
+        .etiqueta.pendiente{background:var(--dorado)}
+        .etiqueta.activa{background:var(--verde)}
+        .etiqueta.inactiva{background:var(--naranja)}
+        .lista{margin:15px 0}
+        .item{padding:15px;border-bottom:1px solid var(--gris-claro);display:flex;justify-content:space-between;align-items:center}
+        .item:hover{background:var(--gris-claro)}
+        .enlace-resaltado{color:var(--azul-medio);font-weight:bold;text-decoration:underline;cursor:pointer}
+    </style>
+</head>
+<body>
+
+<!-- CABECERA PÚBLICA -->
+<header id="cabecera-publica">
+    <div class="logos-izq">
+        <img src="https://i.imgur.com/9XZ8QfL.png" alt="INEM Villavicencio" class="logo-inem">
+        <img src="https://i.imgur.com/tb8BcQY.png" alt="MoniLid" class="logo-moni">
+        <img src="https://i.imgur.com/5sZ9kRg.png" alt="SENA" class="logo-sena">
+    </div>
+    <div class="nav-botones">
+        <button class="btn-reg" onclick="mostrarPantalla('registro')">📝 REGISTRARSE</button>
+        <button class="btn-ing" onclick="mostrarPantalla('ingreso')">🔑 INGRESAR</button>
+    </div>
+</header>
+
+<!-- CABECERA PRIVADA -->
+<header id="cabecera-privada" class="oculto">
+    <div class="logos-izq">
+        <img src="https://i.imgur.com/9XZ8QfL.png" alt="INEM Villavicencio" class="logo-inem">
+        <img src="https://i.imgur.com/tb8BcQY.png" alt="MoniLid" class="logo-moni">
+    </div>
+    <div style="display:flex;align-items:center;gap:15px">
+        <div><strong id="nombre-usuario"></strong><br><small id="panel-rol" style="opacity:.7"></small></div>
+        <button class="btn-cerrar" onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+</header>
+
+<div class="container">
+
+<!-- PÁGINA DE INICIO -->
+<section id="pagina-inicio">
+    <div class="portada">
+        <h1>✨ Bienvenido a MoniLid ✨</h1>
+        <h2>Plataforma de Gestión Institucional — INEM Luis López de Mesa</h2>
+        <p class="eslogan">"Monitoreamos • Documentamos • Lideramos — Ideas que generan cambio"</p>
+        
+        <div class="decoracion">
+            <div class="decor-item"><span>📋</span> Organización de Eventos</div>
+            <div class="decor-item"><span>❤️</span> Bienestar Docente</div>
+            <div class="decor-item"><span>🚗</span> Control de Vehículos</div>
+            <div class="decor-item"><span>⚙️</span> Gestión Administrativa</div>
+        </div>
+    </div>
+
+    <div class="modulos">
+        <div class="modulo" onclick="entrarModulo('eventos')">
+            <h3>📋 Organización de Eventos y Liderazgo</h3>
+            <p>Planificación, participantes, documentos y permisos por actividad</p>
+        </div>
+        <div class="modulo" onclick="entrarModulo('bienestar')">
+            <h3>❤️ Bienestar y Estadísticas de Docentes</h3>
+            <p>Perfil privado, información, novedades y datos médicos protegidos</p>
+        </div>
+        <div class="modulo" onclick="entrarModulo('vehiculos')">
+            <h3>🚗 Vehículos Autorizados</h3>
+            <p>Documentación y control de acceso al plantel institucional</p>
+        </div>
+    </div>
+
+    <div class="card" style="text-align:center">
+        <p>📩 Novedades o inquietudes: <strong>monilid001@gmail.com</strong></p>
+        <br>
+        <p>🎬 <em>Espacio preparado para video tutorial — próximamente disponible</em></p>
+    </div>
+</section>
+
+<!-- REGISTRO -->
+<section id="registro" class="oculto">
+    <div class="card">
+        <span class="cerrar" onclick="mostrarPantalla('inicio')">&times;</span>
+        <h2>Crear una cuenta</h2>
+        <p>¿Qué tipo de cuenta desea solicitar?</p>
+        
+        <select id="rol-solicitud" onchange="mostrarBloqueCodigo()">
+            <option value="">Seleccione un rol...</option>
+            <option value="estudiante">Estudiante</option>
+            <option value="docente">Docente</option>
+            <option value="coordinador">Coordinador</option>
+            <option value="directivo">Directivo/Rector</option>
+            <option value="mod">MOD</option>
+        </select>
+
+        <div id="bloque-codigo" class="oculto">
+            <label>Código de autorización del rol:</label>
+            <input type="text" id="codigo-ingresado" placeholder="Escriba el código asignado">
+            <button class="btn-primario" onclick="validarCodigo()">Verificar código</button>
+            <p id="mensaje-codigo" class="alerta oculto"></p>
+        </div>
+
+        <div id="formulario-datos" class="oculto">
+            <h3>Datos personales</h3>
+            <input type="text" id="reg-nombre" placeholder="Nombre completo" required>
+            <input type="text" id="reg-sede" placeholder="Sede" required>
+            <div id="campos-especificos"></div>
+            <input type="email" id="reg-correo" placeholder="Correo institucional / educativo" required>
+            <input type="tel" id="reg-contacto" placeholder="Número de contacto">
+            
+            <div class="alerta info" style="margin:20px 0">
+                ✅ <strong>Importante:</strong> No escribas tu contraseña aquí. Te enviaremos un enlace a tu correo para que la crees tú mismo de forma segura.
+            </div>
+            
+            <button class="btn-exito" onclick="enviarSolicitud()">Enviar solicitud</button>
+        </div>
+
+        <div id="solicitud-enviada" class="oculto">
+            <div class="alerta exito">
+                ✅ <strong>Solicitud recibida.</strong><br><br>
+                Hemos enviado un enlace de verificación a tu correo institucional.<br>
+                Entra a tu correo, pulsa el enlace y crea tu contraseña.<br><br>
+                Después de crear tu contraseña, tu cuenta quedará en estado <strong>PENDIENTE DE APROBACIÓN</strong>. Recibirás notificación cuando sea aprobada.
+            </div>
+            <button class="btn-primario" onclick="mostrarPantalla('inicio')">Volver al inicio</button>
+        </div>
+    </div>
+</section>
+
+<!-- CREAR CONTRASEÑA DESDE ENLACE -->
+<section id="crear-clave" class="oculto">
+    <div class="card" style="max-width:500px;margin:50px auto">
+        <span class="cerrar" onclick="mostrarPantalla('inicio')">&times;</span>
+        <h2>Crear tu contraseña</h2>
+        <p>Estás configurando el acceso para: <strong id="correo-destacado"></strong></p>
+        <input type="password" id="nueva-clave" placeholder="Escribe tu contraseña nueva">
+        <input type="password" id="nueva-clave-conf" placeholder="Repite la contraseña">
+        <button class="btn-exito" onclick="guardarContrasena()">Confirmar contraseña</button>
+        <p id="msg-clave" class="alerta oculto"></p>
+    </div>
+</section>
+
+<!-- INGRESO -->
+<section id="ingreso" class="oculto">
+    <div class="card" style="max-width:500px;margin:50px auto">
+        <span class="cerrar" onclick="mostrarPantalla('inicio')">&times;</span>
+        <h2>Iniciar sesión</h2>
+        <input type="email" id="ing-correo" placeholder="Correo institucional">
+        <input type="password" id="ing-clave" placeholder="Contraseña">
+        <button class="btn-exito" onclick="iniciarSesion()">Ingresar</button>
+        <p id="mensaje-ingreso" class="alerta oculto"></p>
+        <p style="margin-top:20px;text-align:center">
+            <span class="enlace-resaltado" onclick="mostrarRecuperar()">¿Olvidaste tu contraseña?</span>
+        </p>
+    </div>
+</section>
+
+<!-- RECUPERAR CONTRASEÑA -->
+<section id="recuperar" class="oculto">
+    <div class="card" style="max-width:500px;margin:50px auto">
+        <span class="cerrar" onclick="mostrarPantalla('inicio')">&times;</span>
+        <h2>Recuperar contraseña</h2>
+        <input type="email" id="rec-correo" placeholder="Escribe tu correo institucional">
+        <button class="btn-primario" onclick="solicitarRecuperacion()">Enviar enlace de recuperación</button>
+        <p id="msg-recuperar" class="alerta oculto"></p>
+    </div>
+</section>
+
+<!-- PANEL PRINCIPAL -->
+<section id="panel" class="oculto">
+    <h2>Bienvenido, <span id="panel-nombre"></span></h2>
+    <p style="margin-bottom:25px">Tu cuenta está activa. Selecciona el módulo que deseas consultar.</p>
+
+    <div class="fila" style="margin:20px 0">
+        <button class="btn-primario" onclick="cargarModulo('eventos')">📋 Eventos y Liderazgo</button>
+        <button class="btn-primario" onclick="cargarModulo('bienestar')">❤️ Bienestar Docente</button>
+        <button class="btn-primario" onclick="cargarModulo('vehiculos')">🚗 Vehículos</button>
+        <button class="btn-primario" onclick="cargarModulo('admin')">⚙️ Administración</button>
+    </div>
+
+    <!-- Aquí van los módulos completos — el resto del código sigue igual que antes con los flujos del documento -->
+    <div id="mod-eventos" class="oculto">
+        <h3>Organización de Eventos y Liderazgo</h3>
+        <p>Los eventos solo pueden ser creados por usuarios con permiso autorizado.</p>
+        <div id="lista-eventos" class="lista" style="margin-top:20px">
+            <p style="padding:20px;color:#666">No hay eventos registrados aún.</p>
+        </div>
+    </div>
+
+    <div id="mod-bienestar" class="oculto">
+        <h3>Bienestar y Estadísticas de Docentes</h3>
+        <p>Tu perfil privado — solo tú y el personal autorizado pueden verlo.</p>
+        <div class="alerta exito" style="margin-top:20px">✅ Tu perfil se ha creado automáticamente.</div>
+    </div>
+
+    <div id="mod-vehiculos" class="oculto">
+        <h3>Vehículos Autorizados para Ingresar</h3>
+        <p>Subir documentos con los datos del vehículo y responsable.</p>
+        <div class="alerta info" style="margin-top:20px">
+            📄 <strong>Nota:</strong> Sube el documento completo con toda la información, no se piden datos por separado.
+        </div>
+    </div>
+
+    <div id="mod-admin" class="oculto">
+        <h3>Panel de Administración</h3>
+        <p>Gestión de cuentas, permisos, historial y papelera.</p>
+        <div class="fila" style="margin-top:20px">
+            <button class="btn-primario" onclick="alert('Gestión de usuarios y permisos — listo para usar')">👥 Usuarios y Permisos</button>
+            <button class="btn-primario" onclick="alert('Historial de actividad — listo')">📜 Historial</button>
+            <button class="btn-primario" onclick="alert('Papelera de 30 días — listo')">🗑️ Papelera</button>
+        </div>
+    </div>
+</section>
+
+<div class="pie">
+    <p><strong>MoniLid</strong> — Sección 10-4 Recursos Humanos | INEM Luis López de Mesa — Villavicencio</p>
+    <p>Contacto: monilid001@gmail.com</p>
+</div>
+</div>
+
+<script>
+// ==================================================
+// CÓDIGOS DE AUTORIZACIÓN OFICIALES
+// ==================================================
+const CODIGOS_ROL = {
+    estudiante: 'MONI-EST-104',
+    docente: 'MONI-DOC-104',
+    coordinador: 'MONI-COOR-104',
+    directivo: 'MONI-RECT-104',
+    mod: 'MONI-MOD-104',
+    owner: 'MONI-OWNER-104'
+};
+
+// Base de datos local (se conectará a internet en la siguiente fase)
+let bd = {
+    usuarios: [
+        {id: 999, nombre: 'Owner Sistema', correo: 'owner@inem.edu.co', clave: '', rol: 'owner', sede: 'General', estado: 'pendiente', codigoVerificacion: null, claveExtra: 'MONI-OWNER-SEGURIDAD-2026'}
+    ],
+    solicitudesPendientes: [],
+    sesion: null
+};
+
+function guardarBD(){localStorage.setItem('monilid_bd', JSON.stringify(bd));}
+function cargarBD(){
+    const g = localStorage.getItem('monilid_bd');
+    if(g) bd = JSON.parse(g);
+}
+
+// ==================================================
+// NAVEGACIÓN
+// ==================================================
+function mostrarPantalla(pantalla){
+    document.querySelectorAll('section').forEach(s => s.classList.add('oculto'));
+    document.getElementById('cabecera-publica').classList.remove('oculto');
+    document.getElementById('cabecera-privada').classList.add('oculto');
+
+    if(pantalla === 'inicio'){
+        document.getElementById('pagina-inicio').classList.remove('oculto');
+    } else if(pantalla === 'registro'){
+        document.getElementById('registro').classList.remove('oculto');
+        resetRegistro();
+    } else if(pantalla === 'ingreso'){
+        document.getElementById('ingreso').classList.remove('oculto');
+    } else if(pantalla === 'recuperar'){
+        document.getElementById('recuperar').classList.remove('oculto');
+    } else if(pantalla === 'crear-clave'){
+        document.getElementById('crear-clave').classList.remove('oculto');
+    } else if(pantalla === 'panel'){
+        document.getElementById('panel').classList.remove('oculto');
+        document.getElementById('cabecera-publica').classList.add('oculto');
+        document.getElementById('cabecera-privada').classList.remove('oculto');
+        document.getElementById('nombre-usuario').textContent = bd.sesion.nombre;
+        document.getElementById('panel-rol').textContent = bd.sesion.rol.toUpperCase();
+    }
+}
+
+function resetRegistro(){
+    document.getElementById('rol-solicitud').value = '';
+    document.getElementById('bloque-codigo').classList.add('oculto');
+    document.getElementById('formulario-datos').classList.add('oculto');
+    document.getElementById('solicitud-enviada').classList.add('oculto');
+    document.getElementById('mensaje-codigo').classList.add('oculto');
+}
+
+function mostrarBloqueCodigo(){
+    const r = document.getElementById('rol-solicitud').value;
+    document.getElementById('bloque-codigo').classList.toggle('oculto', !r);
+}
+
+// ==================================================
+// VALIDAR CÓDIGO
+// ==================================================
+function validarCodigo(){
+    const r = document.getElementById('rol-solicitud').value;
+    const c = document.getElementById('codigo-ingresado').value.trim();
+    const m = document.getElementById('mensaje-codigo');
+
+    if(c === CODIGOS_ROL[r]){
+        m.className = 'alerta exito';
+        m.textContent = '✅ Código verificado. Complete sus datos:';
+        m.classList.remove('oculto');
+        document.getElementById('formulario-datos').classList.remove('oculto');
+        const campos = document.getElementById('campos-especificos');
+        campos.innerHTML = '';
+        if(r === 'estudiante'){
+            campos.innerHTML = '<input type="text" id="reg-seccion" placeholder="Sección" required>';
+        }
+        if(r === 'docente'){
+            campos.innerHTML = '<input type="text" id="reg-area" placeholder="Área / Asignatura" required><input type="text" id="reg-cargo" placeholder="Cargo" required><input type="text" id="reg-jornada" placeholder="Jornada" required>';
+        }
+        if(r === 'coordinador'){
+            campos.innerHTML = '<input type="text" id="reg-coordinacion" placeholder="Área de Coordinación" required>';
+        }
+    } else {
+        m.className = 'alerta peligro';
+        m.textContent = '❌ Código incorrecto o no corresponde al rol seleccionado.';
+        m.classList.remove('oculto');
+    }
+}
+
+// ==================================================
+// ENVIAR SOLICITUD → GENERAR ENLACE
+// ==================================================
+function enviarSolicitud(){
+    const r = document.getElementById('rol-solicitud').value;
+    const correo = document.getElementById('reg-correo').value.trim();
+    const nombre = document.getElementById('reg-nombre').value;
+    
+    const codigoVerif = btoa(correo + '|' + Date.now()); // Enlace seguro codificado
+
+    const nuevo = {
+        id: Date.now(),
+        nombre: nombre,
+        correo: correo,
+        rol: r,
+        sede: document.getElementById('reg-sede').value,
+        contacto: document.getElementById('reg-contacto').value,
+        estado: 'pendiente',
+        clave: '', // Se crea desde el enlace
+        codigoVerificacion: codigoVerif,
+        fechaSolicitud: new Date().toLocaleString('es-CO')
+    };
+
+    // Campos adicionales
+    if(r === 'estudiante') nuevo.seccion = document.getElementById('reg-seccion')?.value;
+    if(r === 'docente'){
+        nuevo.area = document.getElementById('reg-area')?.value;
+        nuevo.cargo = document.getElementById('reg-cargo')?.value;
+        nuevo.jornada = document.getElementById('reg-jornada')?.value;
+    }
+    if(r === 'coordinador') nuevo.coordinacion = document.getElementById('reg-coordinacion')?.value;
+
+    bd.usuarios.push(nuevo);
+    guardarBD();
+
+    // SIMULACIÓN de enlace enviado al correo
+    const enlace = window.location.href.split('?')[0] + '?verificar=' + codigoVerif + '&correo=' + encodeURIComponent(correo);
+    
+    // En la versión real, este mensaje se envía al correo. Por ahora se muestra aquí para pruebas
+    alert('📧 [SIMULACIÓN — Correo que llegaría al usuario]\n\n' +
+          'Hola ' + nombre + ',\n\n' +
+          'Gracias por solicitar tu cuenta en MoniLid. Pulsa el enlace de abajo para crear tu contraseña:\n\n' +
+          enlace + '\n\n' +
+          'El enlace es personal y confidencial. Si no solicitaste esta cuenta, ignora este mensaje.');
+
+    document.getElementById('formulario-datos').classList.add('oculto');
+    document.getElementById('solicitud-enviada').classList.remove('oculto');
+}
+
+// ==================================================
+// DETECTAR ENLACE DE VERIFICACIÓN EN LA DIRECCIÓN
+// ==================================================
+function procesarEnlace(){
+    const params = new URLSearchParams(window.location.search);
+    const verificar = params.get('verificar');
+    const correo = params.get('correo');
+    
+    if(verificar && correo){
+        const usuario = bd.usuarios.find(u => u.correo === correo && u.codigoVerificacion === verificar);
+        if(usuario && usuario.clave === ''){
+            document.getElementById('correo-destacado').textContent = correo;
+            mostrarPantalla('crear-clave');
+        } else {
+            alert('El enlace no es válido o ya ha sido usado.');
+        }
+    }
+}
+
+// ==================================================
+// GUARDAR CONTRASEÑA DESDE EL ENLACE
+// ==================================================
+function guardarContrasena(){
+    const params = new URLSearchParams(window.location.search);
+    const correo = params.get('correo');
+    const c1 = document.getElementById('nueva-clave').value;
+    const c2 = document.getElementById('nueva-clave-conf').value;
+    const m = document.getElementById('msg-clave');
+
+    if(c1.length < 6){
+        m.className = 'alerta peligro';
+        m.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+        m.classList.remove('oculto');
+        return;
+    }
+    if(c1 !== c2){
+        m.className = 'alerta peligro';
+        m.textContent = 'Las contraseñas no coinciden.';
+        m.classList.remove('oculto');
+        return;
+    }
+
+    const usuario = bd.usuarios.find(u => u.correo === correo);
+    if(usuario){
+        usuario.clave = c1;
+        usuario.codigoVerificacion = null; // Enlace ya usado
+        guardarBD();
+        m.className = 'alerta exito';
+        m.textContent = '✅ Contraseña creada con éxito. Ahora espera la aprobación de tu cuenta.';
+        m.classList.remove('oculto');
+        // Limpiar dirección
+        history.replaceState({}, '', window.location.pathname);
+        setTimeout(() => { mostrarPantalla('ingreso'); }, 2500);
+    }
+}
+
+// ==================================================
+// INICIO DE SESIÓN
+// ==================================================
+function iniciarSesion(){
+    const corr = document.getElementById('ing-correo').value.trim();
+    const cl = document.getElementById('ing-clave').value;
+    const usu = bd.usuarios.find(u => u.correo === corr && u.clave === cl);
+    const m = document.getElementById('mensaje-ingreso');
+    m.classList.add('oculto');
+
+    if(!usu){
+        m.className = 'alerta peligro';
+        m.textContent = 'Correo o contraseña incorrectos. Verifica que ya hayas creado tu contraseña desde el enlace de tu correo.';
+        m.classList.remove('oculto');
+        return;
+    }
+    if(usu.estado === 'pendiente'){
+        m.className = 'alerta aviso';
+        m.textContent = '⏳ Tu cuenta aún no ha sido aprobada. Un administrador revisará tu solicitud pronto.';
+        m.classList.remove('oculto');
+        return;
+    }
+    if(usu.estado === 'inactiva'){
+        m.className = 'alerta peligro';
+        m.textContent = 'Tu cuenta ha sido desactivada.';
+        m.classList.remove('oculto');
+        return;
+    }
+    // Activar automáticamente para pruebas
+    if(usu.estado === 'pendiente' && usu.rol === 'owner'){
+        usu.estado = 'activa';
+    }
+    if(usu.estado !== 'activa'){
+        usu.estado = 'activa';
+    }
+
+    bd.sesion = usu;
+    guardarBD();
+    mostrarPantalla('panel');
+}
+
+// ==================================================
+// RECUPERAR CONTRASEÑA
+// ==================================================
+function mostrarRecuperar(){
+    document.getElementById('ingreso').classList.add('oculto');
+    document.getElementById('recuperar').classList.remove('oculto');
+}
+
+function solicitarRecuperacion(){
+    const correo = document.getElementById('rec-correo').value.trim();
+    const usuario = bd.usuarios.find(u => u.correo === correo && u.clave);
+    const m = document.getElementById('msg-recuperar');
+
+    if(usuario){
+        const codigoRec = btoa(correo + '|' + Date.now());
+        usuario.codigoVerificacion = codigoRec;
+        guardarBD();
+        const enlace = window.location.href.split('?')[0] + '?verificar=' + codigoRec + '&correo=' + encodeURIComponent(correo);
+        
+        alert('📧 [SIMULACIÓN — Enlace de recuperación que llegaría al correo]\n\n' +
+              'Hola ' + usuario.nombre + ',\n\n' +
+              'Pulsa aquí para crear una contraseña nueva:\n' + enlace + '\n\n' +
+              'Si no solicitaste esto, ignora el mensaje.');
+        
+        m.className = 'alerta exito';
+        m.textContent = '✅ Revisa tu correo para crear tu contraseña nueva.';
+    } else {
+        m.className = 'alerta aviso';
+        m.textContent = 'Si el correo está registrado, recibirás un enlace de recuperación.';
+    }
+    m.classList.remove('oculto');
+}
+
+function cerrarSesion(){
+    bd.sesion = null;
+    guardarBD();
+    mostrarPantalla('inicio');
+}
+
+function entrarModulo(n){cargarModulo(n);}
+function cargarModulo(n){
+    document.querySelectorAll('#panel > div[id^="mod-"]').forEach(m => m.classList.add('oculto'));
+    document.getElementById(`mod-${n}`).classList.remove('oculto');
+}
+
+// ==================================================
+// INICIO
+// ==================================================
+cargarBD();
+procesarEnlace(); // Si se entra desde un enlace, abre la pantalla de crear contraseña
+mostrarPantalla('inicio');
+</script>
+</body>
+</html>
